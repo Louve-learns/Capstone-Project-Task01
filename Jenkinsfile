@@ -80,6 +80,36 @@ pipeline {
                 '''
             }
         }
+        
+        stage('Push to GHCR') {
+            steps {
+                echo 'Pushing FinSecure Pay image to GHCR...'
+
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'ghcr-credentials',
+                        usernameVariable: 'GHCR_USERNAME',
+                        passwordVariable: 'GHCR_PASSWORD'
+                    )
+                ]) {
+                    sh '''
+                        set +x
+                        set -eu
+
+                        export DOCKER_CONFIG="$(mktemp -d)"
+                        trap 'rm -rf "$DOCKER_CONFIG"' EXIT
+
+                        printf '%s' "$GHCR_PASSWORD" |
+                            docker login ghcr.io \
+                                -u "$GHCR_USERNAME" \
+                                --password-stdin
+
+                        docker push \
+                            ghcr.io/louve-learns/finsecure-pay:build-${BUILD_NUMBER}
+                    '''
+                }
+            }
+        }
 
     }
 }
