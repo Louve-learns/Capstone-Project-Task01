@@ -3,8 +3,6 @@ package com.example.finsecure_pay;
 
 import org.junit.jupiter.api.Test;
 
-import com.example.finsecurepay.TransactionRequest;
-import com.example.finsecurepay.TransactionValidator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
