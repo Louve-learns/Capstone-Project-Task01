@@ -60,5 +60,21 @@ pipeline {
             }
         }
 
+        stage('Container Build') {
+            steps {
+                echo 'Building FinSecure Pay Docker image...'
+
+                sh '''
+                    set -e
+
+                    docker build \
+                    -t ghcr.io/louve-learns/finsecure-pay:build-${BUILD_NUMBER} \
+                    .
+
+                    docker images
+                '''
+            }
+        }
+
     }
 }
