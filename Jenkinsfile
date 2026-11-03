@@ -42,5 +42,23 @@ pipeline {
             }
         }
 
+        stage('Security Checks') {
+            steps {
+                echo 'Running Trivy security scan...'
+
+                sh '''
+                    mkdir -p .tools
+
+                    curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b "$PWD/.tools" v0.76.1
+
+                    ./.tools/trivy fs \
+                        --scanners vuln \
+                        --severity HIGH,CRITICAL \
+                        --exit-code 1 \
+                    .
+                '''
+            }
+        }
+
     }
 }
