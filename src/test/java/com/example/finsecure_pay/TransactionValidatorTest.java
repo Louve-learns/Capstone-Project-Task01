@@ -2,6 +2,10 @@
 package com.example.finsecure_pay;
 
 import org.junit.jupiter.api.Test;
+
+import com.example.finsecurepay.TransactionRequest;
+import com.example.finsecurepay.TransactionValidator;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
@@ -87,4 +91,13 @@ public class TransactionValidatorTest {
 
         assertFalse(result.valid());
     }
+    
+    @Test
+    void intentionalFailureForPipelineDemo() {
+        org.junit.jupiter.api.Assertions.assertEquals(
+        1, 2,
+        "Intentional failure to demonstrate CI/CD protection"
+        );
+    }   
+
 }
