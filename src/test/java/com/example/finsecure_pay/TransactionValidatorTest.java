@@ -86,7 +86,7 @@ public class TransactionValidatorTest {
         );
 
         ValidationResult result = validator.validate(request);
-        import com.example.finsecurepay.ValidationResult;
+        
 
         assertFalse(result.valid());
     }
