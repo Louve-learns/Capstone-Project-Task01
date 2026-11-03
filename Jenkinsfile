@@ -141,19 +141,25 @@ pipeline {
             steps {
                 echo 'Testing security gate using an outdated container image...'
 
-                sh '''
+                sh ''' 
+                    set -e
+
+                    IMAGE="security-demo:remediated-${BUILD_NUMBER}"
+
+                    docker build -f Dockerfile.security-demo -t "$IMAGE" .
+
                     ./.tools/trivy image \
                      --scanners vuln \
                      --severity HIGH,CRITICAL \
                      --format json \
                      --output trivy-gate-demo.json \
-                     node:26-alpine
+                     "$IMAGE"
 
                     ./.tools/trivy image \
                      --scanners vuln \
                      --severity HIGH,CRITICAL \
                      --exit-code 1 \
-                     node:26-alpine
+                     "$IMAGE"
                 '''
         }
 
