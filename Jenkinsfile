@@ -137,6 +137,34 @@ pipeline {
     }
 }
 
+        stage('Security Gate Demonstration') {
+            steps {
+                echo 'Testing security gate using an outdated container image...'
+
+                sh '''
+                    ./.tools/trivy image \
+                     --scanners vuln \
+                     --severity HIGH,CRITICAL \
+                     --format json \
+                     --output trivy-gate-demo.json \
+                     node:14
+
+                    ./.tools/trivy image \
+                     --scanners vuln \
+                     --severity HIGH,CRITICAL \
+                     --exit-code 1 \
+                     node:14
+                '''
+        }
+
+    post {
+        always {
+            archiveArtifacts artifacts: 'trivy-gate-demo.json',
+                             allowEmptyArchive: true
+        }
+    }
+}
+
         stage('Push to GHCR') {
             steps {
                 echo 'Pushing FinSecure Pay image to GHCR...'
