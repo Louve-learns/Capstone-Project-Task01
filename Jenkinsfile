@@ -36,6 +36,24 @@ pipeline {
             }
         }
 
+        stage('Code Quality') {
+            steps {
+                echo 'Running PMD static code analysis...'
+
+                sh '''
+                    sh ./mvnw -B \
+                        org.apache.maven.plugins:maven-pmd-plugin:3.28.0:check
+                '''
+            }
+
+            post {
+                always {
+                    archiveArtifacts artifacts: 'target/pmd.xml',
+                             allowEmptyArchive: true
+                }
+            }
+        }
+
         stage('Package') {
             steps {
                 echo 'Packaging FinSecure Pay application...'
