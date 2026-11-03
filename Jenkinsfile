@@ -147,13 +147,13 @@ pipeline {
                      --severity HIGH,CRITICAL \
                      --format json \
                      --output trivy-gate-demo.json \
-                     node:14
+                     node:26-alpine
 
                     ./.tools/trivy image \
                      --scanners vuln \
                      --severity HIGH,CRITICAL \
                      --exit-code 1 \
-                     node:14
+                     node:26-alpine
                 '''
         }
 
