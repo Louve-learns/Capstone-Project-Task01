@@ -90,13 +90,6 @@ public class TransactionValidatorTest {
 
         assertFalse(result.valid());
     }
-    
-    @Test
-    void intentionalFailureForPipelineDemo() {
-        org.junit.jupiter.api.Assertions.assertEquals(
-        1, 2,
-        "Intentional failure to demonstrate CI/CD protection"
-        );
-    }   
+     
 
 }
