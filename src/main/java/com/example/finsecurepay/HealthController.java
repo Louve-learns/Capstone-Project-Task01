@@ -15,3 +15,5 @@ public class HealthController {
     }
 
 }
+
+// Jenkins SCM polling trigger verification
