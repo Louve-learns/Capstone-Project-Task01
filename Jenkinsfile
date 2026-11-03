@@ -103,6 +103,40 @@ pipeline {
             }
         }
         
+        stage('Container Image Scan') {
+            steps {
+                echo 'Scanning Docker image with Trivy...'
+
+                sh '''
+                    set -e
+
+                    IMAGE="ghcr.io/louve-learns/finsecure-pay:build-${BUILD_NUMBER}"
+
+                    ./.tools/trivy image \
+                     --image-src docker \
+                     --scanners vuln \
+                     --severity HIGH,CRITICAL \
+                     --format json \
+                     --output trivy-image-report.json \
+                     "$IMAGE"
+
+                    ./.tools/trivy image \
+                     --image-src docker \
+                     --scanners vuln \
+                     --severity HIGH,CRITICAL \
+                     --exit-code 1 \
+                     "$IMAGE"
+                 '''
+        }
+
+        post {
+        always {
+            archiveArtifacts artifacts: 'trivy-image-report.json',
+                             allowEmptyArchive: true
+        }
+    }
+}
+
         stage('Push to GHCR') {
             steps {
                 echo 'Pushing FinSecure Pay image to GHCR...'
