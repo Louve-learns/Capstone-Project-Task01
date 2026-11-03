@@ -65,6 +65,11 @@ pipeline {
                 echo 'Building FinSecure Pay Docker image...'
 
                 sh '''
+                    pwd
+                    ls -la
+                    test -f Dockerfile
+                ''' 
+                sh '''
                     set -e
 
                     docker build \
