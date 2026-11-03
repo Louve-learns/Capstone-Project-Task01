@@ -32,5 +32,15 @@ pipeline {
             }
         }
 
+        stage('Package') {
+            steps {
+                echo 'Packaging FinSecure Pay application...'
+                sh 'sh ./mvnw -B -DskipTests package'
+                sh 'ls -lh target/*.jar'
+
+                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+            }
+        }
+
     }
 }
