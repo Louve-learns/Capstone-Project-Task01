@@ -111,5 +111,38 @@ pipeline {
             }
         }
 
+            stage('Deploy to EKS') {
+                steps {
+                    echo 'Deploying FinSecure Pay to AWS EKS...'
+
+                    withCredentials([
+                        file(
+                            credentialsId: 'eks-deployer-kubeconfig',
+                            variable: 'KUBECONFIG'
+                        )
+                    ]) {
+                        sh '''
+                            set -eu
+
+                            echo "Checking Kubernetes access..."
+                            kubectl -n default get deployment finsecure-pay
+
+                            echo "Updating application image..."
+                            kubectl -n default set image \
+                                deployment/finsecure-pay \
+                                finsecure-pay=ghcr.io/louve-learns/finsecure-pay:build-${BUILD_NUMBER}
+
+                            echo "Verifying rollout..."
+                            kubectl -n default rollout status \
+                                deployment/finsecure-pay --timeout=180s
+
+                            echo "Checking application Pods..."
+                            kubectl -n default get pods \
+                                -l app=finsecure-pay
+                        '''
+                    }
+                }
+            }
+
     }
 }
